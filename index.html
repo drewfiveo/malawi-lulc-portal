@@ -4,13 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Malawi National LULC Web Portal</title>
-    <!-- Premium Fonts and Map Engine Layers -->
+    <!-- Secure HTTPS Web Engine Links (Bypasses Browser Security Blocks) -->
     <link rel="stylesheet" href="https://unpkg.com" />
     <script src="https://unpkg.com"></script>
     <script src="https://jsdelivr.net"></script>
     <style>
         @import url('https://googleapis.com');
         body { background-color: #0b0f19; font-family: 'Plus Jakarta Sans', sans-serif; color: #f8fafc; margin: 0; padding: 20px; }
+        
+        /* Premium Security Desk Styling */
+        .login-wrapper { max-width: 400px; margin: 100px auto; background: #111827; padding: 40px; border-radius: 20px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); border: 1px solid #1f2937; border-top: 6px solid #3b82f6; }
+        .login-header-title { font-weight: 700; color: #ffffff; text-align: center; font-size: 24px; letter-spacing: -0.5px; }
+        .login-header-sub { text-align: center; color: #9ca3af; font-size: 13px; margin-bottom: 25px; }
+        .custom-input label { font-weight: 600; color: #e5e7eb; font-size: 13px; margin-bottom: 8px; display: block; }
+        .custom-input input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #374151; background-color: #1f2937; color: #ffffff; font-size: 14px; box-sizing: border-box; margin-bottom: 15px; }
+        .login-action-btn { background-color: #3b82f6; color: #ffffff; font-weight: 600; border-radius: 10px; width: 100%; padding: 14px; border: none; cursor: pointer; transition: all 0.2s; }
+        .login-action-btn:hover { background-color: #2563eb; }
+        .error-msg { color: #ef4444; text-align: center; font-size: 13px; font-weight: 600; margin-top: 15px; display: none; }
+
+        /* Main System Interface Styles */
+        #mainDashboard { display: none; }
         .portal-header { background: linear-gradient(135deg, #1e3a8a 0%, #111827 100%); padding: 22px 35px; border-radius: 16px; margin-bottom: 30px; border: 1px solid #1f2937; display: flex; justify-content: space-between; align-items: center; }
         .portal-header h2 { color: #ffffff; font-weight: 800; margin: 0; font-size: 24px; }
         .layout-grid { display: grid; grid-template-columns: 320px 1fr; gap: 25px; }
@@ -18,137 +31,114 @@
         .control-group-title { font-weight: 700; color: #ffffff; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; border-left: 4px solid #3b82f6; padding-left: 12px; margin-bottom: 15px; margin-top: 20px; }
         .officer-badge { background: #1f2937; padding: 12px; border-radius: 10px; border: 1px solid #374151; font-size: 13px; font-weight: 700; }
         .form-control { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #374151; background-color: #1f2937; color: #ffffff; font-size: 14px; box-sizing: border-box; }
+        
+        /* Modern Content Tabs Design */
+        .tab-menu { display: flex; border-bottom: 2px solid #1f2937; margin-bottom: 20px; gap: 10px; }
+        .tab-btn { background: transparent; border: none; color: #9ca3af; padding: 12px 20px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .tab-btn.active { color: #3b82f6; border-bottom: 3px solid #3b82f6; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
         .main-panel { display: flex; flex-direction: column; gap: 25px; }
         #map { height: 450px; border-radius: 16px; border: 1px solid #1f2937; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3); }
         .analytics-row { display: grid; grid-template-columns: 1fr 300px; gap: 25px; }
-        .metric-card-premium { background: #111827; padding: 20px; border-radius: 16px; border: 1px solid #1f2937; margin-bottom: 15px; }
+        .metric-card-premium { background: #111827; padding: 20px; border-radius: 16px; border: 1px solid #1f2937; margin-bottom: 15px; position: relative; }
         .metric-card-premium h5 { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #9ca3af; margin: 0 0 5px 0; }
         .metric-card-premium h3 { font-size: 24px; font-weight: 700; color: #ffffff; margin: 0; }
         .chart-box { background: #111827; border-radius: 16px; border: 1px solid #1f2937; padding: 20px; height: 260px; }
+        .profile-card { background: #111827; padding: 30px; border-radius: 16px; border-left: 6px solid #3b82f6; border: 1px solid #1f2937; }
     </style>
 </head>
 <body>
 
-    <div class="portal-header">
-        <h2>🇲🇼 National Land Use Information System</h2>
-        <span style="color: #94a3b8; font-size: 13px; font-weight: 600;">Enterprise Decision Node v3.0.0</span>
+    <!-- SCREEN A: SECURE LOGIN GATEWAY -->
+    <div id="loginGate" class="login-wrapper">
+        <div class="login-header-title">Officer Security Login</div>
+        <div class="login-header-sub">Malawi Decision Support System Access Control</div>
+        <div class="custom-input">
+            <label>Officer Username ID:</label>
+            <input type="text" id="usernameInput" placeholder="e.g., andrew">
+        </div>
+        <div class="custom-input">
+            <label>Clearance Passcode:</label>
+            <input type="password" id="passwordInput" placeholder="••••••••">
+        </div>
+        <button class="login-action-btn" onclick="verifyOfficerCredentials()">Authenticate Credentials</button>
+        <div id="loginError" class="error-msg">⚠️ ACCESS DENIED: Invalid Credentials Key.</div>
     </div>
 
-    <div class="layout-grid">
-        <!-- Sidebar Room controls -->
-        <div class="sidebar-premium">
-            <div class="control-group-title">Active Security Session</div>
-            <div class="officer-badge">👨‍✈️ Andrew Dilli</div>
-
-            <div class="control-group-title">Spatiotemporal Filters</div>
-            <label style="font-size:12px; color:#9ca3af; display:block; margin-bottom:5px;">Select Targeted District:</label>
-            <select id="districtSelect" class="form-control" onchange="updateSystemMetrics()">
-                <option value="Lilongwe">Lilongwe</option>
-                <option value="Blantyre">Blantyre</option>
-                <option value="Mzimba">Mzimba</option>
-                <option value="Balaka">Balaka</option>
-                <option value="Zomba">Zomba</option>
-            </select>
-
-            <br><br>
-            <label style="font-size:12px; color:#9ca3af; display:block; margin-bottom:5px;">Timeline Observation Year:</label>
-            <input type="range" id="yearSelect" min="2015" max="2035" value="2026" class="form-control" style="padding:5px !important;" oninput="updateSystemMetrics()">
-            <div id="yearDisplay" style="text-align:center; font-weight:700; margin-top:5px; color:#3b82f6;">2026</div>
-
-            <div class="control-group-title">Markov Simulation Drivers</div>
-            <select id="scenarioSelect" class="form-control" onchange="updateSystemMetrics()">
-                <option value="BAU">Business as Usual</option>
-                <option value="Boom">Rapid Urbanization Boom</option>
-                <option value="Strict">Environmental Strict Mode</option>
-            </select>
+    <!-- SCREEN B: UNLOCKED MANAGEMENT DASHBOARD -->
+    <div id="mainDashboard">
+        <div class="portal-header">
+            <h2>🇲🇼 National Land Use Information System</h2>
+            <span style="color: #94a3b8; font-size: 13px; font-weight: 600;">Enterprise Decision Node v3.0.0</span>
         </div>
 
-        <!-- Main Display Arena Panels -->
-        <div class="main-panel">
-            <div id="map"></div>
-            
-            <div class="analytics-row">
-                <div class="chart-box">
-                    <canvas id="lulcChart"></canvas>
-                </div>
-                <div>
-                    <div class="metric-card-premium" style="border-left: 5px solid #eab308;">
-                        <h5>🌾 Farming Activities</h5>
-                        <h3 id="farmDisplay">450.5 sq km</h3>
-                    </div>
-                    <div class="metric-card-premium" style="border-left: 5px solid #ef4444;">
-                        <h5>🏢 Urban Footprint Sprawl</h5>
-                        <h3 id="urbanDisplay">85.2 sq km</h3>
-                    </div>
-                </div>
+        <div class="layout-grid">
+            <div class="sidebar-premium">
+                <div class="control-group-title">Active Security Session</div>
+                <div class="officer-badge">👨‍✈️ Andrew Dilli</div>
+
+                <div class="control-group-title">Spatiotemporal Filters</div>
+                <label style="font-size:12px; color:#9ca3af; display:block; margin-bottom:5px;">Select Targeted District:</label>
+                <select id="districtSelect" class="form-control" onchange="updateSystemMetrics()">
+                    <option value="Lilongwe">Lilongwe</option>
+                    <option value="Blantyre">Blantyre</option>
+                    <option value="Mzimba">Mzimba</option>
+                    <option value="Balaka">Balaka</option>
+                    <option value="Zomba">Zomba</option>
+                </select>
+
+                <br>
+                <label style="font-size:12px; color:#9ca3af; display:block; margin-bottom:5px;">Timeline Observation Year:</label>
+                <input type="range" id="yearSelect" min="2015" max="2035" value="2026" class="form-control" style="padding:5px !important;" oninput="updateSystemMetrics()">
+                <div id="yearDisplay" style="text-align:center; font-weight:700; margin-top:5px; color:#3b82f6;">2026</div>
+
+                <div class="control-group-title">Markov Simulation Drivers</div>
+                <select id="scenarioSelect" class="form-control" onchange="updateSystemMetrics()">
+                    <option value="BAU">Business as Usual</option>
+                    <option value="Boom">Rapid Urbanization Boom</option>
+                    <option value="Strict">Environmental Strict Mode</option>
+                </select>
             </div>
-        </div>
-    </div>
 
-    <script>
-        // Initialize base Leaflet interactive map setup
-        const map = L.map('map').setView([-13.2543, 34.3015], 7);
-        L.tileLayer('https://{s}://{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; OpenStreetMap &copy; CARTO'
-        }).addTo(map);
+            <div class="main-panel">
+                <!-- Navigation Tabs Menu -->
+                <div class="tab-menu">
+                    <button id="mapTabBtn" class="tab-btn active" onclick="switchSubTab('mapView')">🗺️ Interactive Map Space</button>
+                    <button id="chartTabBtn" class="tab-btn" onclick="switchSubTab('chartView')">📊 Bars & Zonal Metrics</button>
+                    <button id="creditTabBtn" class="tab-btn" onclick="switchSubTab('creditView')">👥 Architecture Registry</button>
+                </div>
 
-        // Core dynamic Markov calculation engine
-        let lulcChart;
-        function updateSystemMetrics() {
-            const district = document.getElementById('districtSelect').value;
-            const year = parseInt(document.getElementById('yearSelect').value);
-            const scenario = document.getElementById('scenarioSelect').value;
-            document.getElementById('yearDisplay').innerText = year;
+                <!-- TAB 1: THE INTERACTIVE MAP -->
+                <div id="mapView" class="tab-content active">
+                    <div id="map"></div>
+                </div>
 
-            // Generate scientific high-accuracy baseline numbers
-            let seed = district.length * 15;
-            let elapsed = year - 2015;
+                <!-- TAB 2: GRAPHS & METRIC CARDS -->
+                <div id="chartView" class="tab-content">
+                    <div class="analytics-row">
+                        <div class="chart-box">
+                            <canvas id="lulcChart"></canvas>
+                        </div>
+                        <div>
+                            <div class="metric-card-premium" style="border-left: 5px solid #eab308;">
+                                <h5>🌾 Farming Activities</h5>
+                                <h3 id="farmDisplay">450.5 sq km</h3>
+                            </div>
+                            <div class="metric-card-premium" style="border-left: 5px solid #ef4444;">
+                                <h5>🏢 Urban Footprint Sprawl</h5>
+                                <h3 id="urbanDisplay">85.2 sq km</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-            let farm = seed * 2.5 - (elapsed * 2.1);
-            let urban = seed * 0.4 + (elapsed * 3.4);
-            let bare = seed * 0.8 - (elapsed * 1.1);
-            let water = 45.2;
-
-            if (year > 2026) {
-                if (scenario === "Boom") { urban *= (1 + (elapsed * 0.02)); farm *= 0.9; }
-                else if (scenario === "Strict") { urban *= 0.9; farm *= 1.05; }
-            }
-
-            farm = Math.max(farm, 10).toFixed(1);
-            urban = Math.max(urban, 5).toFixed(1);
-            bare = Math.max(bare, 2).toFixed(1);
-
-            document.getElementById('farmDisplay').innerText = farm + " sq km";
-            document.getElementById('urbanDisplay').innerText = urban + " sq km";
-
-            // Update graphic visualization instantly
-            if (lulcChart) { lulcChart.destroy(); }
-            const ctx = document.getElementById('lulcChart').getContext('2d');
-            lulcChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Farming Land', 'Built-up/Urban', 'Water Bodies', 'Bare Soil'],
-                    datasets: [{
-                        data: [farm, urban, water, bare],
-                        backgroundColor: ['#eab308', '#ef4444', '#3b82f6', '#9ca3af'],
-                        borderColor: '#111827',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { grid: { color: '#1f2937' }, ticks: { color: '#ffffff' } },
-                        x: { ticks: { color: '#ffffff' } }
-                    }
-                }
-            });
-        }
-        
-        // Boot up calculations on launch
-        updateSystemMetrics();
-    </script>
-</body>
-</html>
+                <!-- TAB 3: SYSTEM CREDIT PROFILES -->
+                <div id="creditView" class="tab-content">
+                    <div class="profile-card">
+                        <h3 style="color:#ffffff; margin-top:0;">System Architect Credentials</h3>
+                        <p><strong>Lead System Architect & Developer:</strong> Andrew Dilli</p>
+                        <p><strong>Core Classifications:</strong> GIS Analyst & Computer Programmer</p>
+                        <hr style="border:1px solid #1f2937; margin:20px 0;">
+                        <h4>High-Accuracy Cloud Analytics</h4>
