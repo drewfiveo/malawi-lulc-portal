@@ -20,22 +20,26 @@
         .custom-input input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #374151; background-color: #1f2937; color: #ffffff; font-size: 14px; box-sizing: border-box; margin-bottom: 15px; }
         .login-action-btn { background-color: #3b82f6; color: #ffffff; font-weight: 600; border-radius: 10px; width: 100%; padding: 14px; border: none; cursor: pointer; transition: all 0.2s; }
         .login-action-btn:hover { background-color: #2563eb; }
+        .switch-view-link { display: block; text-align: center; margin-top: 20px; font-size: 13px; color: #3b82f6; font-weight: 600; cursor: pointer; text-decoration: none; }
         .error-msg { color: #ef4444; text-align: center; font-size: 13px; font-weight: 600; margin-top: 15px; display: none; }
+        .success-msg { color: #10b981; text-align: center; font-size: 13px; font-weight: 600; margin-top: 15px; display: none; }
 
         /* Main System Interface Styles */
         #mainDashboard { display: none; }
+        #signupGate { display: none; }
         .portal-header { background: linear-gradient(135deg, #1e3a8a 0%, #111827 100%); padding: 22px 35px; border-radius: 16px; margin-bottom: 30px; border: 1px solid #1f2937; display: flex; justify-content: space-between; align-items: center; }
         .portal-header h2 { color: #ffffff; font-weight: 800; margin: 0; font-size: 24px; }
         .layout-grid { display: grid; grid-template-columns: 320px 1fr; gap: 25px; }
         .sidebar-premium { background: #111827; border-radius: 16px; padding: 25px; border: 1px solid #1f2937; height: fit-content; }
         .control-group-title { font-weight: 700; color: #ffffff; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; border-left: 4px solid #3b82f6; padding-left: 12px; margin-bottom: 15px; margin-top: 20px; }
-        .officer-badge { background: #1f2937; padding: 12px; border-radius: 10px; border: 1px solid #374151; font-size: 13px; font-weight: 700; }
+        .officer-badge { background: #1f2937; padding: 12px; border-radius: 10px; border: 1px solid #374151; font-size: 13px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
         .form-control { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #374151; background-color: #1f2937; color: #ffffff; font-size: 14px; box-sizing: border-box; }
         
         /* Modern Content Tabs Design */
         .tab-menu { display: flex; border-bottom: 2px solid #1f2937; margin-bottom: 20px; gap: 10px; }
         .tab-btn { background: transparent; border: none; color: #9ca3af; padding: 12px 20px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
         .tab-btn.active { color: #3b82f6; border-bottom: 3px solid #3b82f6; }
+        .tab-menu button:focus { outline: none; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
@@ -46,7 +50,7 @@
         .metric-card-premium h5 { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #9ca3af; margin: 0 0 5px 0; }
         .metric-card-premium h3 { font-size: 24px; font-weight: 700; color: #ffffff; margin: 0; }
         .chart-box { background: #111827; border-radius: 16px; border: 1px solid #1f2937; padding: 20px; height: 260px; }
-        .profile-card { background: #111827; padding: 30px; border-radius: 16px; border-left: 6px solid #3b82f6; border: 1px solid #1f2937; }
+        .profile-card { background: #111827; padding: 35px; border-radius: 16px; border-left: 6px solid #3b82f6; border: 1px solid #1f2937; }
     </style>
 </head>
 <body>
@@ -64,10 +68,32 @@
             <input type="password" id="passwordInput" placeholder="••••••••">
         </div>
         <button class="login-action-btn" onclick="verifyOfficerCredentials()">Authenticate Credentials</button>
+        <a class="switch-view-link" onclick="toggleInterfaceView('signup')">🆕 Register New Officer Account</a>
         <div id="loginError" class="error-msg">⚠️ ACCESS DENIED: Invalid Credentials Key.</div>
     </div>
 
-    <!-- SCREEN B: UNLOCKED MANAGEMENT DASHBOARD -->
+    <!-- SCREEN B: DYNAMIC REGISTRATION DOOR -->
+    <div id="signupGate" class="login-wrapper" style="border-top-color: #3b82f6;">
+        <div class="login-header-title">Register Officer</div>
+        <div class="login-header-sub">Enroll new personnel records into security matrix</div>
+        <div class="custom-input">
+            <label>Official Full Name:</label>
+            <input type="text" id="regFullName" placeholder="e.g., Chimwemwe Phiri">
+        </div>
+        <div class="custom-input">
+            <label>Desired Username ID:</label>
+            <input type="text" id="regUsername" placeholder="e.g., chimwemwe">
+        </div>
+        <div class="custom-input">
+            <label>Assign Security Passcode:</label>
+            <input type="password" id="regPassword" placeholder="••••••••">
+        </div>
+        <button class="login-action-btn" style="background-color: #3b82f6;" onclick="registerNewOfficerAccount()">Create Account & Save Record</button>
+        <a class="switch-view-link" onclick="toggleInterfaceView('login')">⬅️ Return to Sign-in Desk</a>
+        <div id="regError" class="error-msg">⚠️ ERROR: Please fill in all fields completely.</div>
+        <div id="regSuccess" class="success-msg">✅ Registration Complete! Returning to login...</div>
+    </div>
+    <!-- SCREEN C: UNLOCKED MANAGEMENT DASHBOARD -->
     <div id="mainDashboard">
         <div class="portal-header">
             <h2>🇲🇼 National Land Use Information System</h2>
@@ -77,7 +103,10 @@
         <div class="layout-grid">
             <div class="sidebar-premium">
                 <div class="control-group-title">Active Security Session</div>
-                <div class="officer-badge">👨‍✈️ Andrew Dilli</div>
+                <div class="officer-badge">
+                    <span>👨‍✈️ <span id="activeOfficerLabel">Andrew Dilli</span></span>
+                    <button onclick="logOutPortal()" style="background:#ef4444; border:none; color:white; font-size:10px; font-weight:700; padding:4px 8px; border-radius:4px; cursor:pointer;">Lock</button>
+                </div>
 
                 <div class="control-group-title">Spatiotemporal Filters</div>
                 <label style="font-size:12px; color:#9ca3af; display:block; margin-bottom:5px;">Select Targeted District:</label>
@@ -142,3 +171,104 @@
                         <p><strong>Core Classifications:</strong> GIS Analyst & Computer Programmer</p>
                         <hr style="border:1px solid #1f2937; margin:20px 0;">
                         <h4>High-Accuracy Cloud Analytics</h4>
+                        <p>This decentralized web application couples client-side vector matrices with static observation data configurations. It models agricultural expansions, urban conversions, and environmental baseline fluctuations across Malawi out to a 2035 predictive simulation boundary.</p>
+                        <p style="font-size:12px; color:#64748b; margin-top:20px;">Powered by HTML5 WebGL Mapping Canvas, ChartJS Graphic Pipelines, and Secure GitHub Pages Hosting. © 2026 All Rights Reserved.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // System Navigation Views Toggle Controller
+        function toggleInterfaceView(targetView) {
+            document.getElementById('loginGate').style.display = 'none';
+            document.getElementById('signupGate').style.display = 'none';
+            document.getElementById('mainDashboard').style.display = 'none';
+            document.getElementById('loginError').style.display = 'none';
+            document.getElementById('regError').style.display = 'none';
+            
+            if (targetView === 'login') {
+                document.getElementById('loginGate').style.display = 'block';
+            } else if (targetView === 'signup') {
+                document.getElementById('signupGate').style.display = 'block';
+            } else if (targetView === 'dashboard') {
+                document.getElementById('mainDashboard').style.display = 'block';
+                setTimeout(() => { map.invalidateSize(); }, 200);
+            }
+        }
+
+        // Professional Registration Storage Logic
+        function registerNewOfficerAccount() {
+            const fullName = document.getElementById('regFullName').value.trim();
+            const username = document.getElementById('regUsername').value.trim().toLowerCase();
+            const password = document.getElementById('regPassword').value.trim();
+
+            if (!fullName || !username || !password) {
+                document.getElementById('regError').style.display = 'block';
+                return;
+            }
+
+            // Save inside Web Browser Local Storage Database Container
+            let existingUsers = JSON.parse(localStorage.getItem('portal_officers')) || {};
+            existingUsers[username] = { password: password, name: fullName };
+            localStorage.setItem('portal_officers', JSON.stringify(existingUsers));
+
+            document.getElementById('regSuccess').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('regSuccess').style.display = 'none';
+                document.getElementById('regFullName').value = '';
+                document.getElementById('regUsername').value = '';
+                document.getElementById('regPassword').value = '';
+                toggleInterfaceView('login');
+            }, 1500);
+        }
+
+        // Fixed Security Login Validator Matrix
+        function verifyOfficerCredentials() {
+            const user = document.getElementById('usernameInput').value.trim().toLowerCase();
+            const pass = document.getElementById('passwordInput').value.trim();
+            document.getElementById('loginError').style.display = 'none';
+
+            // Master default account fallback
+            if (user === "andrew" && pass === "malawi2026") {
+                document.getElementById('activeOfficerLabel').innerText = "Andrew Dilli";
+                toggleInterfaceView('dashboard');
+                updateSystemMetrics();
+                return;
+            }
+
+            // Look inside our custom local storage container registry table
+            let registeredUsers = JSON.parse(localStorage.getItem('portal_officers')) || {};
+            if (registeredUsers[user] && registeredUsers[user].password === pass) {
+                document.getElementById('activeOfficerLabel').innerText = registeredUsers[user].name;
+                toggleInterfaceView('dashboard');
+                updateSystemMetrics();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+            }
+        }
+
+        function logOutPortal() {
+            document.getElementById('usernameInput').value = '';
+            document.getElementById('passwordInput').value = '';
+            toggleInterfaceView('login');
+        }
+
+        // Sub-Tab Navigation Bar Component
+        function switchSubTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            if (tabId === 'mapView') document.getElementById('mapTabBtn').classList.add('active');
+            if (tabId === 'chartView') document.getElementById('chartTabBtn').classList.add('active');
+            if (tabId === 'creditView') document.getElementById('creditTabBtn').classList.add('active');
+        }
+
+        // Initialize Base Interactive Map Canvas Setup
+        const map = L.map('map').setView([-13.2543, 34.3015], 7);
+        L.tileLayer('https://{s}://{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OpenStreetMap &copy; CARTO'
+        }).addTo(map);
+
