@@ -4,27 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Malawi National LULC Web Portal</title>
-    <!-- Secure HTTPS Web Engine Links (Bypasses Browser Security Blocks) -->
+    <!-- Secure Assets -->
     <link rel="stylesheet" href="https://unpkg.com" />
     <script src="https://unpkg.com"></script>
     <script src="https://jsdelivr.net"></script>
     <style>
         @import url('https://googleapis.com');
         body { background-color: #0b0f19; font-family: 'Plus Jakarta Sans', sans-serif; color: #f8fafc; margin: 0; padding: 20px; }
-        
-        /* Premium Security Desk Styling */
-        .login-wrapper { max-width: 400px; margin: 100px auto; background: #111827; padding: 40px; border-radius: 20px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); border: 1px solid #1f2937; border-top: 6px solid #3b82f6; }
+        .login-wrapper { max-width: 400px; margin: 100px auto; background: #111827; padding: 40px; border-radius: 20px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); border: 1px solid #1f2937; border-top: 6px solid #3b82f6; display: block; }
         .login-header-title { font-weight: 700; color: #ffffff; text-align: center; font-size: 24px; letter-spacing: -0.5px; }
         .login-header-sub { text-align: center; color: #9ca3af; font-size: 13px; margin-bottom: 25px; }
         .custom-input label { font-weight: 600; color: #e5e7eb; font-size: 13px; margin-bottom: 8px; display: block; }
         .custom-input input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #374151; background-color: #1f2937; color: #ffffff; font-size: 14px; box-sizing: border-box; margin-bottom: 15px; }
-        .login-action-btn { background-color: #3b82f6; color: #ffffff; font-weight: 600; border-radius: 10px; width: 100%; padding: 14px; border: none; cursor: pointer; transition: all 0.2s; }
+        .login-action-btn { background-color: #3b82f6; color: #ffffff; font-weight: 600; border-radius: 10px; width: 100%; padding: 14px; border: none; cursor: pointer; transition: all 0.2s; display: block; text-align: center; width: 100%; box-sizing: border-box; }
         .login-action-btn:hover { background-color: #2563eb; }
         .switch-view-link { display: block; text-align: center; margin-top: 20px; font-size: 13px; color: #3b82f6; font-weight: 600; cursor: pointer; text-decoration: none; }
         .error-msg { color: #ef4444; text-align: center; font-size: 13px; font-weight: 600; margin-top: 15px; display: none; }
         .success-msg { color: #10b981; text-align: center; font-size: 13px; font-weight: 600; margin-top: 15px; display: none; }
-
-        /* Main System Interface Styles */
         #mainDashboard { display: none; }
         #signupGate { display: none; }
         .portal-header { background: linear-gradient(135deg, #1e3a8a 0%, #111827 100%); padding: 22px 35px; border-radius: 16px; margin-bottom: 30px; border: 1px solid #1f2937; display: flex; justify-content: space-between; align-items: center; }
@@ -34,15 +30,11 @@
         .control-group-title { font-weight: 700; color: #ffffff; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; border-left: 4px solid #3b82f6; padding-left: 12px; margin-bottom: 15px; margin-top: 20px; }
         .officer-badge { background: #1f2937; padding: 12px; border-radius: 10px; border: 1px solid #374151; font-size: 13px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
         .form-control { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #374151; background-color: #1f2937; color: #ffffff; font-size: 14px; box-sizing: border-box; }
-        
-        /* Modern Content Tabs Design */
         .tab-menu { display: flex; border-bottom: 2px solid #1f2937; margin-bottom: 20px; gap: 10px; }
         .tab-btn { background: transparent; border: none; color: #9ca3af; padding: 12px 20px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
         .tab-btn.active { color: #3b82f6; border-bottom: 3px solid #3b82f6; }
-        .tab-menu button:focus { outline: none; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-
         .main-panel { display: flex; flex-direction: column; gap: 25px; }
         #map { height: 450px; border-radius: 16px; border: 1px solid #1f2937; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3); }
         .analytics-row { display: grid; grid-template-columns: 1fr 300px; gap: 25px; }
@@ -55,220 +47,90 @@
 </head>
 <body>
 
-    <!-- SCREEN A: SECURE LOGIN GATEWAY -->
+    <!-- SIGN-IN SCREEN -->
     <div id="loginGate" class="login-wrapper">
         <div class="login-header-title">Officer Security Login</div>
         <div class="login-header-sub">Malawi Decision Support System Access Control</div>
         <div class="custom-input">
             <label>Officer Username ID:</label>
-            <input type="text" id="usernameInput" placeholder="e.g., andrew">
+            <input type="text" id="usernameInput">
         </div>
         <div class="custom-input">
             <label>Clearance Passcode:</label>
-            <input type="password" id="passwordInput" placeholder="••••••••">
+            <input type="password" id="passwordInput">
         </div>
-        <button class="login-action-btn" onclick="verifyOfficerCredentials()">Authenticate Credentials</button>
-        <a class="switch-view-link" onclick="toggleInterfaceView('signup')">🆕 Register New Officer Account</a>
+        <button class="login-action-btn" id="loginSubmitBtn">Authenticate Credentials</button>
+        <a class="switch-view-link" id="linkToSignup">🆕 Register New Officer Account</a>
         <div id="loginError" class="error-msg">⚠️ ACCESS DENIED: Invalid Credentials Key.</div>
     </div>
 
-    <!-- SCREEN B: DYNAMIC REGISTRATION DOOR -->
+    <!-- REGISTRATION SCREEN -->
     <div id="signupGate" class="login-wrapper" style="border-top-color: #3b82f6;">
         <div class="login-header-title">Register Officer</div>
         <div class="login-header-sub">Enroll new personnel records into security matrix</div>
         <div class="custom-input">
             <label>Official Full Name:</label>
-            <input type="text" id="regFullName" placeholder="e.g., Chimwemwe Phiri">
+            <input type="text" id="regFullName">
         </div>
         <div class="custom-input">
             <label>Desired Username ID:</label>
-            <input type="text" id="regUsername" placeholder="e.g., chimwemwe">
+            <input type="text" id="regUsername">
         </div>
         <div class="custom-input">
             <label>Assign Security Passcode:</label>
-            <input type="password" id="regPassword" placeholder="••••••••">
+            <input type="password" id="regPassword">
         </div>
-        <button class="login-action-btn" style="background-color: #3b82f6;" onclick="registerNewOfficerAccount()">Create Account & Save Record</button>
-        <a class="switch-view-link" onclick="toggleInterfaceView('login')">⬅️ Return to Sign-in Desk</a>
+        <button class="login-action-btn" style="background-color: #3b82f6;" id="signupSubmitBtn">Create Account & Save Record</button>
+        <a class="switch-view-link" id="linkToLogin">⬅️ Return to Sign-in Desk</a>
         <div id="regError" class="error-msg">⚠️ ERROR: Please fill in all fields completely.</div>
         <div id="regSuccess" class="success-msg">✅ Registration Complete! Returning to login...</div>
     </div>
-    <!-- SCREEN C: UNLOCKED MANAGEMENT DASHBOARD -->
+
+    <!-- MAIN DASHBOARD -->
     <div id="mainDashboard">
         <div class="portal-header">
             <h2>🇲🇼 National Land Use Information System</h2>
             <span style="color: #94a3b8; font-size: 13px; font-weight: 600;">Enterprise Decision Node v3.0.0</span>
         </div>
-
         <div class="layout-grid">
             <div class="sidebar-premium">
                 <div class="control-group-title">Active Security Session</div>
                 <div class="officer-badge">
                     <span>👨‍✈️ <span id="activeOfficerLabel">Andrew Dilli</span></span>
-                    <button onclick="logOutPortal()" style="background:#ef4444; border:none; color:white; font-size:10px; font-weight:700; padding:4px 8px; border-radius:4px; cursor:pointer;">Lock</button>
+                    <button id="lockPortalBtn" style="background:#ef4444; border:none; color:white; font-size:10px; font-weight:700; padding:4px 8px; border-radius:4px; cursor:pointer;">Lock</button>
                 </div>
-
                 <div class="control-group-title">Spatiotemporal Filters</div>
                 <label style="font-size:12px; color:#9ca3af; display:block; margin-bottom:5px;">Select Targeted District:</label>
-                <select id="districtSelect" class="form-control" onchange="updateSystemMetrics()">
+                <select id="districtSelect" class="form-control">
                     <option value="Lilongwe">Lilongwe</option>
                     <option value="Blantyre">Blantyre</option>
                     <option value="Mzimba">Mzimba</option>
                     <option value="Balaka">Balaka</option>
                     <option value="Zomba">Zomba</option>
                 </select>
-
                 <br>
                 <label style="font-size:12px; color:#9ca3af; display:block; margin-bottom:5px;">Timeline Observation Year:</label>
-                <input type="range" id="yearSelect" min="2015" max="2035" value="2026" class="form-control" style="padding:5px !important;" oninput="updateSystemMetrics()">
+                <input type="range" id="yearSelect" min="2015" max="2035" value="2026" class="form-control" style="padding:5px !important;">
                 <div id="yearDisplay" style="text-align:center; font-weight:700; margin-top:5px; color:#3b82f6;">2026</div>
-
                 <div class="control-group-title">Markov Simulation Drivers</div>
-                <select id="scenarioSelect" class="form-control" onchange="updateSystemMetrics()">
+                <select id="scenarioSelect" class="form-control">
                     <option value="BAU">Business as Usual</option>
                     <option value="Boom">Rapid Urbanization Boom</option>
                     <option value="Strict">Environmental Strict Mode</option>
                 </select>
             </div>
-
             <div class="main-panel">
-                <!-- Navigation Tabs Menu -->
                 <div class="tab-menu">
-                    <button id="mapTabBtn" class="tab-btn active" onclick="switchSubTab('mapView')">🗺️ Interactive Map Space</button>
-                    <button id="chartTabBtn" class="tab-btn" onclick="switchSubTab('chartView')">📊 Bars & Zonal Metrics</button>
-                    <button id="creditTabBtn" class="tab-btn" onclick="switchSubTab('creditView')">👥 Architecture Registry</button>
+                    <button id="mapTabBtn" class="tab-btn active">🗺️ Interactive Map Space</button>
+                    <button id="chartTabBtn" class="tab-btn">📊 Bars & Zonal Metrics</button>
+                    <button id="creditTabBtn" class="tab-btn">👥 Architecture Registry</button>
                 </div>
-
-                <!-- TAB 1: THE INTERACTIVE MAP -->
                 <div id="mapView" class="tab-content active">
                     <div id="map"></div>
                 </div>
-
-                <!-- TAB 2: GRAPHS & METRIC CARDS -->
                 <div id="chartView" class="tab-content">
                     <div class="analytics-row">
                         <div class="chart-box">
                             <canvas id="lulcChart"></canvas>
                         </div>
                         <div>
-                            <div class="metric-card-premium" style="border-left: 5px solid #eab308;">
-                                <h5>🌾 Farming Activities</h5>
-                                <h3 id="farmDisplay">450.5 sq km</h3>
-                            </div>
-                            <div class="metric-card-premium" style="border-left: 5px solid #ef4444;">
-                                <h5>🏢 Urban Footprint Sprawl</h5>
-                                <h3 id="urbanDisplay">85.2 sq km</h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- TAB 3: SYSTEM CREDIT PROFILES -->
-                <div id="creditView" class="tab-content">
-                    <div class="profile-card">
-                        <h3 style="color:#ffffff; margin-top:0;">System Architect Credentials</h3>
-                        <p><strong>Lead System Architect & Developer:</strong> Andrew Dilli</p>
-                        <p><strong>Core Classifications:</strong> GIS Analyst & Computer Programmer</p>
-                        <hr style="border:1px solid #1f2937; margin:20px 0;">
-                        <h4>High-Accuracy Cloud Analytics</h4>
-                        <p>This decentralized web application couples client-side vector matrices with static observation data configurations. It models agricultural expansions, urban conversions, and environmental baseline fluctuations across Malawi out to a 2035 predictive simulation boundary.</p>
-                        <p style="font-size:12px; color:#64748b; margin-top:20px;">Powered by HTML5 WebGL Mapping Canvas, ChartJS Graphic Pipelines, and Secure GitHub Pages Hosting. © 2026 All Rights Reserved.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // System Navigation Views Toggle Controller
-        function toggleInterfaceView(targetView) {
-            document.getElementById('loginGate').style.display = 'none';
-            document.getElementById('signupGate').style.display = 'none';
-            document.getElementById('mainDashboard').style.display = 'none';
-            document.getElementById('loginError').style.display = 'none';
-            document.getElementById('regError').style.display = 'none';
-            
-            if (targetView === 'login') {
-                document.getElementById('loginGate').style.display = 'block';
-            } else if (targetView === 'signup') {
-                document.getElementById('signupGate').style.display = 'block';
-            } else if (targetView === 'dashboard') {
-                document.getElementById('mainDashboard').style.display = 'block';
-                setTimeout(() => { map.invalidateSize(); }, 200);
-            }
-        }
-
-        // Professional Registration Storage Logic
-        function registerNewOfficerAccount() {
-            const fullName = document.getElementById('regFullName').value.trim();
-            const username = document.getElementById('regUsername').value.trim().toLowerCase();
-            const password = document.getElementById('regPassword').value.trim();
-
-            if (!fullName || !username || !password) {
-                document.getElementById('regError').style.display = 'block';
-                return;
-            }
-
-            // Save inside Web Browser Local Storage Database Container
-            let existingUsers = JSON.parse(localStorage.getItem('portal_officers')) || {};
-            existingUsers[username] = { password: password, name: fullName };
-            localStorage.setItem('portal_officers', JSON.stringify(existingUsers));
-
-            document.getElementById('regSuccess').style.display = 'block';
-            setTimeout(() => {
-                document.getElementById('regSuccess').style.display = 'none';
-                document.getElementById('regFullName').value = '';
-                document.getElementById('regUsername').value = '';
-                document.getElementById('regPassword').value = '';
-                toggleInterfaceView('login');
-            }, 1500);
-        }
-
-        // Fixed Security Login Validator Matrix
-        function verifyOfficerCredentials() {
-            const user = document.getElementById('usernameInput').value.trim().toLowerCase();
-            const pass = document.getElementById('passwordInput').value.trim();
-            document.getElementById('loginError').style.display = 'none';
-
-            // Master default account fallback
-            if (user === "andrew" && pass === "malawi2026") {
-                document.getElementById('activeOfficerLabel').innerText = "Andrew Dilli";
-                toggleInterfaceView('dashboard');
-                updateSystemMetrics();
-                return;
-            }
-
-            // Look inside our custom local storage container registry table
-            let registeredUsers = JSON.parse(localStorage.getItem('portal_officers')) || {};
-            if (registeredUsers[user] && registeredUsers[user].password === pass) {
-                document.getElementById('activeOfficerLabel').innerText = registeredUsers[user].name;
-                toggleInterfaceView('dashboard');
-                updateSystemMetrics();
-            } else {
-                document.getElementById('loginError').style.display = 'block';
-            }
-        }
-
-        function logOutPortal() {
-            document.getElementById('usernameInput').value = '';
-            document.getElementById('passwordInput').value = '';
-            toggleInterfaceView('login');
-        }
-
-        // Sub-Tab Navigation Bar Component
-        function switchSubTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            
-            document.getElementById(tabId).classList.add('active');
-            if (tabId === 'mapView') document.getElementById('mapTabBtn').classList.add('active');
-            if (tabId === 'chartView') document.getElementById('chartTabBtn').classList.add('active');
-            if (tabId === 'creditView') document.getElementById('creditTabBtn').classList.add('active');
-        }
-
-        // Initialize Base Interactive Map Canvas Setup
-        const map = L.map('map').setView([-13.2543, 34.3015], 7);
-        L.tileLayer('https://{s}://{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; OpenStreetMap &copy; CARTO'
-        }).addTo(map);
-
